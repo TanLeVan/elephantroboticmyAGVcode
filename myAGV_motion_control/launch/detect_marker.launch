@@ -1,0 +1,9 @@
+<launch>
+	<arg name="port" default="/dev/ttyUSB0" />
+	<arg name="baud" default="115200" />
+
+	<arg name="num" default="0" />	
+
+	<node name="opencv_camera" pkg="myAGV_motion_control" type="opencv_camera" args="$(arg num)"/>
+	<node name="camera_display" pkg="myAGV_motion_control" type="camera_display"/>
+</launch>
