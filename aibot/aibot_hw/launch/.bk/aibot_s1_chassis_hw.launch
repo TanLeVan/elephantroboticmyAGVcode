@@ -1,0 +1,56 @@
+<launch>
+
+    <!-- Robot Base Aibot Version 1 Description -->
+    <param name="robot_description" command="$(find xacro)/xacro.py $(find aibot_description)/urdf/chassis/s1/aibot_s1.urdf.xacro" />
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher">
+        <param name="publish_frequency" type="double" value="100.0" />
+    </node>
+
+    <!-- Start ROS communication between the robot's computer and aibotrobot base -->
+    <node pkg="rosserial_python" name="rosserial_aibot" type="serial_node.py" output="screen">
+        <param name="port" value="/dev/linobase" />
+        <param name="baud" value="57600" />
+    </node>
+
+    <!-- IMU Relay and Filter -->
+    <include file="$(find aibot_hw)/launch/include/imu/imu.launch" />
+
+    <!-- Publish aibotrobot odometry -->
+    <node pkg="aibot_hw" name="aibot_hw_node" type="aibot_hw_node"></node>
+
+    <!-- Odom-IMU Extended Kalman Filter-->
+    <arg name="ekf_raw_odom" default="raw_odom"/>
+    <arg name="ekf_raw_imu" default="imu/data"/>
+    <arg name="ekf_odom_frame" default="odom"/>
+    <arg name="ekf_base_link_frame" default="base_link"/>
+    <arg name="ekf_world_frame" default="odom"/>
+
+    <node pkg="robot_localization" type="ekf_localization_node" name="ekf_localization"> 
+        <remap from="odometry/filtered" to="odom" />
+        <rosparam command="load" file="$(find aibot_hw)/param/ekf/robot_localization.yaml" />
+        <param name="odom0" value="$(arg ekf_raw_odom)" />
+        <param name="imu0" value="$(arg ekf_raw_imu)" />
+        <param name="odom_frame" value="$(arg ekf_odom_frame)" />
+        <param name="base_link_frame" value="$(arg ekf_base_link_frame)" />
+        <param name="world_frame" value="$(arg ekf_world_frame)" />
+    </node>
+
+    <arg name="laser_frame" default="laser"/>
+    <node name="ydlidar_node"  pkg="ydlidar_ros"  type="ydlidar_node" output="screen" respawn="false" >
+        <param name="port"         type="string" value="/dev/ydlidar"/>  
+        <param name="baudrate"         type="int" value="115200"/>  
+        <param name="frame_id"     type="string" value="$(arg laser_frame)"/>
+        <param name="resolution_fixed"    type="bool"   value="true"/>
+        <param name="auto_reconnect"    type="bool"   value="true"/>
+        <param name="reversion"    type="bool"   value="false"/>
+        <param name="angle_min"    type="double" value="-180" />
+        <param name="angle_max"    type="double" value="180" />
+        <param name="range_min"    type="double" value="0.1" />
+        <param name="range_max"    type="double" value="12.0" />
+        <param name="ignore_array" type="string" value="" />
+        <param name="frequency"    type="double" value="8"/>
+        <param name="samp_rate"    type="int"    value="3"/>
+        <param name="isSingleChannel"    type="bool"   value="true"/>
+    </node>
+
+</launch>

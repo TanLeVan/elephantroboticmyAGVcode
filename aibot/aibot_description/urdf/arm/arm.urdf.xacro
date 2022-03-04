@@ -1,0 +1,357 @@
+<?xml version='1.0'?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:include filename ="$(find aibot_description)/urdf/arm/arm.transmission.xacro"/>
+  <!-- <xacro:include filename ="$(find aibot_description)/urdf/arm/arm.gazebo.xacro"/> -->
+  <xacro:include filename ="$(find aibot_description)/urdf/arm/inertia.xacro"/>
+
+  <xacro:macro name="aibot_arm" params="parent_link *origin">
+    <link name='arm_base_link'>
+      <!-- The Chassis Mesh -->
+      <visual name='arm_base_visual'>
+        <origin xyz="0 0 0" rpy=" 0 0 0"/>
+        <geometry>
+          <mesh filename = "package://aibot_description/urdf/arm/meshes/arm_base.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+
+      <!-- The Collision of the model -->
+      <collision name='collision'>
+        <origin xyz="0 0 0.96" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.0001 0.0001 0.0001"/>
+        </geometry>
+      </collision>
+
+      <!-- the physics for gazebo -->
+      <inertial>
+        <mass value="200.0"/>
+        <origin xyz="0 0 0.96" rpy=" 0 0 0"/>
+        <box_inertia m="8.0" x="0.24" y="0.23" z="1.92"/>
+      </inertial> 
+    </link>
+
+    <joint type="fixed" name="arm_base_link_joint">
+      <xacro:insert_block name="origin" />
+      <child link="arm_base_link"/>
+      <parent link="${parent_link}"/>
+
+    </joint>
+
+
+
+    <link name='arm_base_rot_link'>
+      <visual name='arm_base_rot_visual'>
+        <origin xyz="0 0 0" rpy=" 0 0 0"/>
+        <geometry>
+          <mesh filename = "package://aibot_description/urdf/arm/meshes/arm_base_rot.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+
+      <collision name='collision'>
+        <origin xyz="0 0 0.96" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.0001 0.0001 0.0001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="8.0"/>
+        <origin xyz="0 0 0.96" rpy=" 0 0 0"/>
+        <box_inertia m="8.0" x="0.24" y="0.23" z="1.92"/>
+      </inertial> 
+    </link>
+
+    <joint type="revolute" name="arm_base_rot_link_joint">
+      <origin xyz="0 0 0.0355" rpy="0 0 ${-PI}"/>
+      <child link="arm_base_rot_link"/>
+      <parent link="arm_base_link"/>
+      <axis xyz="0 0 1" />
+      <limit effort="100.0" lower="${(-55) * PI / 180}" upper="${(270-55) * PI / 180}" velocity="0.070"/>
+    </joint>
+
+
+     <link name = "arm_first_link">
+      <visual>
+        <origin xyz = "0 0 0" rpy = "0 0 0"/>
+        <geometry>
+          <mesh filename = "package://aibot_description/urdf/arm/meshes/arm_first.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision name='collision'>
+        <origin xyz="0 0 0.96" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.0001 0.0001 0.0001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="8.0"/>
+        <origin xyz="0 0 0.96" rpy=" 0 0 0"/>
+        <box_inertia m="8.0" x="0.24" y="0.23" z="1.92"/>
+      </inertial>
+    </link>
+
+    <joint type="revolute" name="arm_first_link_joint">
+      <origin xyz="0.04653 0 0.048" rpy="0 0 0"/>
+      <child link="arm_first_link"/>
+      <parent link="arm_base_rot_link"/>
+      <axis xyz="0 1 0" />
+      <limit effort="100000.0" lower="${(-66) * PI / 180}" upper="${(180-66) * PI / 180}" velocity="0"/>
+    </joint>
+
+    <link name = "arm_second_motor_link">
+      <visual>
+        <origin xyz = "0 0 0" rpy = "0 0 0"/>
+        <geometry>
+          <mesh filename = "package://aibot_description/urdf/arm/meshes/arm_second_motor.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision name='collision'>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.0001 0.0001 0.0001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="6.0"/>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <box_inertia m="6.0" x="2.089" y="0.296" z="0.130"/>
+      </inertial> 
+    </link>
+
+    <joint type="revolute" name="arm_second_motor_link_joint">
+      <origin xyz="0 0.0245 0" rpy="0 0 0"/>
+      <child link="arm_second_motor_link"/>
+      <parent link="arm_first_link"/>
+      <axis xyz="0 1 0" />
+      <limit effort="100000.0" lower="0" upper="1.47" velocity="0.0833"/>
+    </joint>
+
+    <link name = "arm_second_connector_link">
+      <visual>
+        <origin xyz = "0 0 0" rpy = "0 0 0"/>
+        <geometry>
+          <mesh filename = "package://aibot_description/urdf/arm/meshes/arm_second_connector.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision name='collision'>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.0001 0.0001 0.0001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="6.0"/>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <box_inertia m="6.0" x="2.089" y="0.296" z="0.130"/>
+      </inertial> 
+    </link>
+
+    <joint type="revolute" name="arm_second_connector_link_joint">
+      <origin xyz="-0.01 -0.002 -0.034759" rpy="0 0 0"/>
+      <child link="arm_second_connector_link"/>
+      <parent link="arm_second_motor_link"/>
+      <axis xyz="0 1 0" />
+      <limit effort="100000.0" lower="0" upper="1.47" velocity="0.0833"/>
+    </joint>
+
+
+    <link name = "arm_second_link">
+      <visual>
+        <origin xyz = "0 0 0" rpy = "0 0 0"/>
+        <geometry>
+          <mesh filename = "package://aibot_description/urdf/arm/meshes/arm_second.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision name='collision'>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.0001 0.0001 0.0001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="6.0"/>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <box_inertia m="6.0" x="2.089" y="0.296" z="0.130"/>
+      </inertial> 
+    </link>
+
+    <joint type="revolute" name="arm_second_link_joint">
+      <origin xyz="-0.048 0 0.106693" rpy="0 0 0"/>
+      <child link="arm_second_link"/>
+      <parent link="arm_first_link"/>
+      <axis xyz="0 1 0" />
+      <limit effort="100000.0" lower="0" upper="2.45" velocity="0.0833"/>
+    </joint>
+
+    <link name = "arm_third_link">
+      <visual>
+        <origin xyz = "0 0 0" rpy = "0 0 0"/>
+        <geometry>
+          <mesh filename = "package://aibot_description/urdf/arm/meshes/arm_third.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision name='collision'>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.0001 0.0001 0.0001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="6.0"/>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <box_inertia m="6.0" x="2.089" y="0.296" z="0.130"/>
+      </inertial> 
+    </link>
+
+    <joint type="revolute" name="arm_third_link_joint">
+      <origin xyz="-0.01995 0 -0.022386" rpy="0 0 0"/>
+      <child link="arm_third_link"/>
+      <parent link="arm_second_link"/>
+      <axis xyz="0 0 1" />
+      <limit effort="100000.0" lower="${(-98) * PI / 180}" upper="${(180-98) * PI / 180}" velocity="0.0833"/>
+    </joint>
+
+    <link name = "arm_fourth_link">
+      <visual>
+        <origin xyz = "0 0 0" rpy = "0 0 0"/>
+        <geometry>
+          <mesh filename = "package://aibot_description/urdf/arm/meshes/arm_fourth.stl" scale="0.001 0.001 0.001"/>
+        </geometry>
+      </visual>
+      <collision name='collision'>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.0001 0.0001 0.0001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="6.0"/>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <box_inertia m="6.0" x="2.089" y="0.296" z="0.130"/>
+      </inertial> 
+    </link>
+
+    <joint type="revolute" name="arm_fourth_link_joint">
+      <origin xyz="-0.00295 0.01034 0.14053" rpy="0 0 0"/>
+      <child link="arm_fourth_link"/>
+      <parent link="arm_third_link"/>
+      <axis xyz="0 1 0" />
+      <limit effort="100000.0" lower="${(-90) * PI / 180}" upper="${(180-90) * PI / 180}" velocity="0.0833"/>
+    </joint>
+
+    <link name = "arm_fifth_link">
+      <visual>
+        <origin xyz = "0 0 0" rpy = "0 0 0"/>
+         <geometry>
+           <box size="0.03 0.01 0.02"/>
+        </geometry>
+      </visual>
+     
+      <collision name='collision'>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.0001 0.0001 0.0001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="6.0"/>
+        <origin xyz="0.09331 0 -0.037679" rpy=" 0 0 0"/>
+        <box_inertia m="6.0" x="2.089" y="0.296" z="0.130"/>
+      </inertial> 
+    </link>
+
+    <joint type="revolute" name="arm_fifth_link_joint">
+      <origin xyz="-0.013 -0.013 0.034" rpy="0 0 0"/>
+      <child link="arm_fifth_link"/>
+      <parent link="arm_fourth_link"/>
+      <axis xyz="0 0 1" />
+      <limit effort="100000.0" lower="${(-90) * PI / 180}" upper="${(180-90) * PI / 180}" velocity="0.083"/>
+    </joint>
+
+
+     <link name = "arm_gripper_left_link">
+      <visual>
+        <origin xyz = "0 0 0" rpy = "0 0 0"/>
+         <geometry>
+           <box size="0.005 0.005 0.02"/>
+        </geometry>
+      </visual>
+     
+      <collision name='collision'>
+        <origin xyz="0.01 0 0.02" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.0001 0.0001 0.0001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="6.0"/>
+        <origin xyz="0.01 0 0.02" rpy=" 0 0 0"/>
+        <box_inertia m="6.0" x="0.005" y="0.005" z="0.02"/>
+      </inertial> 
+    </link>
+
+    <joint type="prismatic" name="arm_gripper_left_link_joint">
+      <origin xyz="0.01 0 0.02" rpy="0 0 0"/>
+      <child link="arm_gripper_left_link"/>
+      <parent link="arm_fifth_link"/>
+      <axis xyz="1 0 0" />
+      <limit effort="100000.0" lower="-0.005" upper="0" velocity="0.005"/>
+    </joint>
+  
+    <link name = "arm_gripper_right_link">
+      <visual>
+        <origin xyz = "0 0 0" rpy = "0 0 0"/>
+         <geometry>
+           <box size="0.005 0.005 0.02"/>
+        </geometry>
+      </visual>
+     
+      <collision name='collision'>
+        <origin xyz="-0.01 0 0.02" rpy=" 0 0 0"/>
+        <geometry>
+          <box size="0.0001 0.0001 0.0001"/>
+        </geometry>
+      </collision>
+
+      <inertial>
+        <mass value="6.0"/>
+        <origin xyz="-0.01 0 0.02" rpy=" 0 0 0"/>
+        <box_inertia m="6.0" x="0.005" y="0.005" z="0.02"/>
+      </inertial> 
+    </link>
+
+    <joint type="prismatic" name="arm_gripper_right_link_joint">
+      <origin xyz="-0.01 0 0.02" rpy="0 0 0"/>
+      <child link="arm_gripper_right_link"/>
+      <parent link="arm_fifth_link"/>
+      <axis xyz="1 0 0" />
+      <limit effort="100000.0" lower="0" upper="0.005" velocity="0.005"/>
+    </joint>
+  
+  
+ 
+    <arm_simple_transmission name = "arm_base_link"             reduction = "1.0"/>
+    <arm_simple_transmission name = "arm_base_rot_link"         reduction = "1.0"/>
+    <arm_simple_transmission name = "arm_first_link"            reduction = "1.0"/>
+    <arm_simple_transmission name = "arm_second_motor_link"     reduction = "1.0"/>
+    <arm_simple_transmission name = "arm_second_connector_link" reduction = "1.0"/>
+    <arm_simple_transmission name = "arm_third_link"            reduction = "1.0"/>
+    <arm_simple_transmission name = "arm_fourth_link"           reduction = "1.0"/>
+    <arm_simple_transmission name = "arm_fifth_link"            reduction = "1.0"/>
+    <arm_simple_transmission name = "arm_gripper_left_link"     reduction = "1.0"/>
+    <arm_simple_transmission name = "arm_gripper_right_link"    reduction = "1.0"/>
+
+    <!-- <arm_gazebo>
+    </arm_gazebo> -->
+
+  </xacro:macro>
+</robot>

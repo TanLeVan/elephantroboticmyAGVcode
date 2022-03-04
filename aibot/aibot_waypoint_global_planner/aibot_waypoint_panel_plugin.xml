@@ -1,0 +1,7 @@
+<library path="lib/libaibot_waypoint_panel">
+    <class name="aibot_waypoint_panel/AibotWaypointPanel"
+           type="aibot_waypoint_panel::AibotWaypointPanel"
+           base_class_type="rviz::Panel">
+        <description>A panel widget allowing multi-goals navigation.</description>
+    </class>
+</library>

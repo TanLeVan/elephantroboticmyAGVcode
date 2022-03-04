@@ -1,0 +1,33 @@
+<?xml version='1.0'?>
+
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <!-- Moment of inertia tensor for a solid cuboid of x, y and z dimensions
+       (width, depth and height).
+       See http://en.wikipedia.org/wiki/List_of_moments_of_inertia -->
+  <xacro:macro name="box_inertia" params="m x y z">
+    <inertia ixx="${1/12 * m * (y * y + z * z)}" ixy="0.0" ixz="0.0"
+             iyy="${1/12 * m * (x * x + z * z)}" iyz="0.0"
+             izz="${1/12 * m * (x * x + y * y)}"/>
+  </xacro:macro>
+
+  <!-- Moment of inertia tensor for a solid cylinder of given mass, radius and
+       length.
+       See http://en.wikipedia.org/wiki/List_of_moments_of_inertia -->
+  <xacro:macro name="cylinder_inertia" params="m r h">
+    <inertia ixx="${1/12 * m * (3 * r * r + h * h)}" ixy="0.0" ixz="0.0"
+             iyy="${1/12 * m * (3 * r * r + h * h)}" iyz="0.0"
+             izz="${1/2  * m * r * r}"/>
+  </xacro:macro>
+
+  <xacro:macro name="sphere_inertia" params="m r">
+    <inertia  ixx="${2*m*r*r/5}" ixy = "0" ixz = "0"
+      iyy="${2*m*r*r/5}" iyz = "0"
+      izz="${2*m*r*r/5}"
+    />
+  </xacro:macro>
+
+  <xacro:property name="PI" value="3.1415926535897931" />
+
+  <property name="deg_to_rad" value="0.01745329251994329577"/>
+</robot>

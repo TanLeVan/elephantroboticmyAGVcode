@@ -1,0 +1,235 @@
+<?xml version='1.0'?>
+
+<robot name="chassis_a1" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <link name='base_link' />
+
+  <link name='base_footprint'>
+
+    <visual name='base_footprint_visual'>
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+      <geometry>
+        <mesh filename="package://aibot_description/meshes/$(env AIBOT_BASE)/car_body.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+
+    <collision name='collision_body'>
+    <origin xyz="0 0 0.045" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.32 0.18 0.09"/>
+      </geometry>
+    </collision>
+
+    <collision name='collision_head'>
+     <origin xyz="0.045 0 0.055" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.12 0.1 0.11"/>
+      </geometry>
+    </collision> 
+
+  </link>
+
+  <joint name="base_footprint_joint" type="fixed" >
+    <origin xyz="0 0 0.0135" rpy="0 0 0"/>
+    <child link="base_footprint"/>
+    <parent link="base_link"/>
+  </joint>
+
+  <link name="front_left_wheel">
+
+    <visual name="front_left_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision name="collision_front_left_wheel">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="front_right_wheel">
+
+    <visual name="front_right_wheel_visual">
+      <origin xyz="0 0 0.0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision name="collision_front_right_wheel">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <joint name="front_left_wheel_hinge" type="fixed">
+    <origin xyz="0.1035 0.09 0.019" rpy="0 0 0"/>
+    <child link="front_left_wheel"/>
+    <parent link="base_footprint"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
+
+  <joint name="front_right_wheel_hinge" type="fixed">
+    <origin xyz="0.1035 -0.09 0.019" rpy="0 0 0"/>
+    <child link="front_right_wheel"/>
+    <parent link="base_footprint"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
+
+
+  <link name="rear_left_wheel">
+
+    <visual name="rear_left_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision name="collision_rear_left_wheel">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="rear_right_wheel">
+
+    <visual name="rear_right_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision name="collision_rear_right_wheel">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </collision>
+ 
+  </link>
+
+  <joint name="rear_left_wheel_hinge" type="fixed">
+    <origin xyz="-0.1035 0.09 0.019" rpy="0 0 0"/>
+    <child link="rear_left_wheel"/>
+    <parent link="base_footprint"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
+
+  <joint name="rear_right_wheel_hinge" type="fixed">
+    <origin xyz="-0.1035 -0.09 0.019" rpy="0 0 0"/>
+    <child link="rear_right_wheel"/>
+    <parent link="base_footprint"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
+
+
+  <link name="camera">
+
+    <visual name="camera_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.005"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+
+    <collision name="collision_camera">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.005"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <origin xyz=".12 0 0.0732" rpy="1.57 0 1.57"/>
+    <parent link="base_footprint"/>
+    <child link="camera"/>
+  </joint>
+
+  <link name="laser">
+
+    <visual name="laser_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.03" length="0.017"/>
+      </geometry>
+      <material name="green_black"/>
+    </visual>
+
+    <collision name="collision_laser">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.03" length="0.017"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <joint name="laser_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz=".0493 0 0.115" rpy="0 0 3.14"/>
+    <parent link="base_footprint"/>
+    <child link="laser"/>
+  </joint>
+
+  <link name="imu_link">
+
+    <visual name="imu_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.001" length="0.001"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <origin xyz="-0.035 -0.01 0.0216" rpy="0 0 0"/>
+    <parent link="base_footprint"/>
+    <child link="imu_link"/>
+  </joint>
+
+  <link name="extend_back_link">
+
+    <visual name="extend_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.001" length="0.001"/>
+      </geometry>
+      <material name="green_black"/>
+    </visual>
+
+  </link>
+
+  <joint name="extend_back_link_joint" type="fixed">
+    <origin xyz="-0.0865 0 0.088" rpy="0 0 0"/>
+    <parent link="base_footprint"/>
+    <child link="extend_back_link"/>
+  </joint>
+
+</robot>

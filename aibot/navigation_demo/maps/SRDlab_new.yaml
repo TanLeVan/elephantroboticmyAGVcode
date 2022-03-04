@@ -1,0 +1,10 @@
+image: SRDlab_new.pgm
+resolution: 0.025000
+#origin: [-12.409844, -16.850061, 0.000000]
+#origin: [7.97, 19.4, 0.000000]
+#origin: [18.0361, 10.3162, 0.2864]
+origin: [0.0, 0.0, 0.0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.196
+

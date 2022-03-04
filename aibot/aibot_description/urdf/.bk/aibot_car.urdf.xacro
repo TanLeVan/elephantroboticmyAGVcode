@@ -1,0 +1,547 @@
+<?xml version='1.0'?>
+
+<robot name="aibot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <link name='base_link' />
+
+  <link name='base_footprint'>
+
+    <visual name='base_footprint_visual'>
+      <origin xyz="0 0 0" rpy="1.57 0 0"/>
+      <geometry>
+        <mesh filename="package://aibot_description/meshes/myagv/car_body.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+
+    <collision name='collision_body'>
+    <origin xyz="0 0 0.045" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.32 0.18 0.09"/>
+      </geometry>
+    </collision>
+
+    <collision name='collision_head'>
+     <origin xyz="0.045 0 0.055" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.12 0.1 0.11"/>
+      </geometry>
+    </collision> 
+
+  </link>
+
+  <joint name="base_footprint_joint" type="fixed" >
+    <origin xyz="0 0 0.016" rpy="0 0 0"/>
+    <child link="base_footprint"/>
+    <parent link="base_link"/>
+  </joint>
+
+  <link name="front_left_wheel">
+
+    <visual name="front_left_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision name="collision_front_left_wheel">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="front_right_wheel">
+
+    <visual name="front_right_wheel_visual">
+      <origin xyz="0 0 0.0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision name="collision_front_right_wheel">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <joint name="front_left_wheel_hinge" type="fixed">
+    <origin xyz="0.1035 0.09 0.019" rpy="0 0 0"/>
+    <child link="front_left_wheel"/>
+    <parent link="base_footprint"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
+
+  <joint name="front_right_wheel_hinge" type="fixed">
+    <origin xyz="0.1035 -0.09 0.019" rpy="0 0 0"/>
+    <child link="front_right_wheel"/>
+    <parent link="base_footprint"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
+
+
+  <link name="rear_left_wheel">
+
+    <visual name="rear_left_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision name="collision_rear_left_wheel">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <link name="rear_right_wheel">
+
+    <visual name="rear_right_wheel_visual">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </visual>
+
+    <collision name="collision_rear_right_wheel">
+      <origin xyz="0 0 0" rpy="0 1.5707 1.5707"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.03"/>
+      </geometry>
+    </collision>
+ 
+  </link>
+
+  <joint name="rear_left_wheel_hinge" type="fixed">
+    <origin xyz="-0.1035 0.09 0.019" rpy="0 0 0"/>
+    <child link="rear_left_wheel"/>
+    <parent link="base_footprint"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
+
+  <joint name="rear_right_wheel_hinge" type="fixed">
+    <origin xyz="-0.1035 -0.09 0.019" rpy="0 0 0"/>
+    <child link="rear_right_wheel"/>
+    <parent link="base_footprint"/>
+    <axis xyz="0 1 0" rpy="0 0 0"/>
+    <limit effort="10000" velocity="1000"/>
+    <joint_properties damping="1.0" friction="1.0"/>
+  </joint>
+
+
+  <link name="camera">
+
+    <visual name="camera_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.005"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+
+    <collision name="collision_camera">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.005" length="0.005"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <joint name="camera_joint" type="fixed">
+    <origin xyz=".12 0 0.0732" rpy="1.57 0 1.57"/>
+    <parent link="base_footprint"/>
+    <child link="camera"/>
+  </joint>
+
+  <link name="laser">
+
+    <visual name="laser_visual">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.03" length="0.017"/>
+      </geometry>
+      <material name="green_black"/>
+    </visual>
+
+    <collision name="collision_laser">
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.03" length="0.017"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <joint name="laser_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz=".0493 0 0.115" rpy="0 0 3.14"/>
+    <parent link="base_footprint"/>
+    <child link="laser"/>
+  </joint>
+
+
+  <link name="arm_base_connect">
+
+    <visual name="arm_base_connect_visual">
+      <origin xyz="0 0 0" rpy="1.57 0 1.57"/>
+      <geometry>
+        <mesh filename="package://aibot_description/meshes/arm_base_connect_cover.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name = "white">
+        <color rgba = "0.5 1 1 1"/>
+      </material>
+    </visual>
+
+    <collision name='collision_arm_base_connect'>
+     <origin xyz="0 0 0.011" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.115 0.135 0.024"/>
+      </geometry>
+    </collision> 
+
+  </link>
+
+  <joint name="arm_base_connect_joint" type="fixed">
+    <origin xyz="-0.0865 0 0.0915" rpy="0 0 0"/>
+    <parent link="base_footprint"/>
+    <child link="arm_base_connect"/>
+  </joint>
+
+
+  <link name="pump_support_link">
+
+    <visual name="pump_support_visual">
+      <origin xyz="0 0 0" rpy="1.57 0 1.57"/>
+      <geometry>
+        <mesh filename="package://aibot_description/meshes/pump_support.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name = "green_gray">
+        <color rgba = "0.2 0.8 0.6 1"/>
+      </material>
+    </visual>
+
+    <collision name='collision_pump_support'>
+     <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="package://aibot_description/meshes/pump_support.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+    </collision> 
+
+  </link>
+
+
+  <joint name="pump_support_joint" type="fixed">
+    <origin xyz="0 -0.049 0.02" rpy="0 0 0"/>
+    <parent link="arm_base_connect"/>
+    <child link="pump_support_link"/>
+  </joint>
+  
+
+
+  <link name="camera_support_link">
+
+    <visual name="camera_support_visual">
+      <geometry>
+        <mesh filename="package://aibot_description/meshes/camera_support.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin xyz = "0 0 0" rpy = "0 1.57 3.14"/>
+      <material name = "green">
+        <color rgba = "0 1 0 1"/>
+      </material>
+    </visual>
+
+    <collision name='collision_camera_support'>
+     <origin xyz="-0.031 0 0.025" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.135 0.06 0.05"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+  <joint name="camera_support_joint" type="fixed">
+    <origin xyz="0.016 0 0.02" rpy="0 0 0"/>
+    <parent link="arm_base_connect"/>
+    <child link="camera_support_link"/>
+  </joint>
+
+
+  <link name="usb_camera_link">
+
+    <visual name="usb_camera_visual">
+      <geometry>
+        <mesh filename="package://aibot_description/meshes/camera.stl" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin xyz = "0.0 0 0" rpy = "1.57 0 1.57"/>
+      <material name = "yellow">
+        <color rgba = "1 1 0 1"/>
+      </material>
+    </visual>
+  </link>
+
+  <joint name="usb_camera_joint" type="fixed">
+    <origin xyz="-0.0848 0 0.0306" rpy="-2.356 0 1.57"/>
+    <parent link="camera_support_link"/>
+    <child link="usb_camera_link"/>
+  </joint>
+
+
+<!-- arm -->
+
+  <link name="joint1">
+
+    <visual>
+      <geometry>
+       <mesh filename="package://aibot_description/meshes/joint1.dae"/>
+      </geometry>
+      <origin xyz = "0.0 0 0 " rpy = " 0 0 0"/>
+      <material name = "white">
+        <color rgba = "0.1 0.1 0.9 1"/>
+      </material>
+    </visual>
+
+    <collision>
+     <origin xyz = "0.0 0 0.036 " rpy = " 0 0 0"/>
+      <geometry>
+        <cylinder length="0.072" radius="0.045"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+
+  <link name="joint2">
+
+    <visual>
+      <geometry>
+       <mesh filename="package://aibot_description/meshes/joint2.dae"/>
+      </geometry>
+      <origin xyz = "0.0 0 0 " rpy = " 0 0 0"/>
+      <material name = "white">
+        <color rgba = "0.4 0.4 0.4 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz = "0.0 0 0.04 " rpy = " 0 0 0"/>
+      <geometry>
+        <cylinder length="0.080" radius="0.024"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+
+  <link name="joint3">
+
+    <visual>
+      <geometry>
+       <mesh filename="package://aibot_description/meshes/joint3.dae"/>
+      </geometry>
+      <origin xyz = "0.0 0 0 " rpy = " 0 0 0"/>
+      <material name = "white">
+        <color rgba = "0.4 0.4 0.4 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz = "0.027 0 0.054 " rpy = " 0 0 0"/>
+      <geometry>
+        <cylinder length="0.156" radius="0.026"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+
+  <link name="joint4">
+
+    <visual>
+      <geometry>
+       <mesh filename="package://aibot_description/meshes/joint4.dae"/>
+      </geometry>
+      <origin xyz = "0.0 0 0 " rpy = " 0 0 0"/>
+      <material name = "white">
+        <color rgba = "0.4 0.4 0.4 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz = "-0.027 0 0.0475 " rpy = " 0 0 0"/>
+      <geometry>
+        <cylinder length="0.137" radius="0.026"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+
+<link name="joint5">
+
+    <visual>
+      <geometry>
+       <mesh filename="package://aibot_description/meshes/joint5.dae"/>
+      </geometry>
+      <origin xyz = "0.0 0 0 " rpy = " 0 0 0"/>
+      <material name = "white">
+        <color rgba = "0.4 0.4 0.4 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz = "0.025 0 0.015 " rpy = " 0 0 0"/>
+      <geometry>
+        <cylinder length="0.06" radius="0.024"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+
+  <link name="joint6">
+
+    <visual>
+      <geometry>
+       <mesh filename="package://aibot_description/meshes/joint6.dae"/>
+      </geometry>
+      <origin xyz = "0.0 0 0 " rpy = " 0 0 0"/>
+      <material name = "white">
+        <color rgba = "0.4 0.4 0.4 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <origin xyz = "0.0 0 0.0379 " rpy = " 1.57 0 0"/>
+      <geometry>
+        <cylinder length="0.058" radius="0.020"/>
+      </geometry>
+    </collision>
+
+  </link>
+
+
+  <link name="joint6_flange">
+
+    <visual>
+      <geometry>
+        <cylinder length="0.005" radius="0.02"/>
+      </geometry>
+      <origin xyz = "0.0 0 0 " rpy = " 1.57075 0 0"/>
+      <material name = "white">
+        <color rgba = "0.9 0.9 0.9 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder length="0.005" radius="0.02"/>
+      </geometry>
+      <origin xyz = "0.0 0 0 " rpy = " 1.57075 0 0"/>
+    </collision>
+    
+  </link>
+
+
+
+  <joint name="joint1_to_connect" type="fixed">
+    <parent link="arm_base_connect"/>
+    <child link="joint1"/>
+    <origin xyz= "0.016 0 0.023" rpy = "0 0 -1.57"/>  
+  </joint>
+
+  <joint name="joint2_to_joint1" type="revolute">
+    <axis xyz="0 0 -1"/>
+    <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0"/>
+    <parent link="joint1"/>
+    <child link="joint2"/>
+    <origin xyz= "0 0 0.0706" rpy = "0 0 0"/>  
+  </joint>
+
+  <joint name="joint3_to_joint2" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0"/>
+    <parent link="joint2"/>
+    <child link="joint3"/>
+    <origin xyz= "0.03256 0  0.05976" rpy = "0 0 0"/>  
+  </joint>
+
+  <joint name="joint4_to_joint3" type="revolute">
+    <axis xyz="1 0 0"/>
+    <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0"/>
+    <parent link="joint3"/>
+    <child link="joint4"/>
+    <origin xyz= " 0.00272 0 0.1104   " rpy = "0 0 0"/>  
+  </joint>
+
+  <joint name="joint5_to_joint4" type="revolute">
+    <axis xyz="-1 0 0"/>
+    <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0"/>
+    <parent link="joint4"/>
+    <child link="joint5"/>
+    <origin xyz= "-0.00164 0 0.096" rpy = "0 0 0"/>  
+  </joint>
+
+  <joint name="joint6_to_joint5" type="revolute">
+    <axis xyz="0 0 -1"/>
+    <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0"/>
+    <parent link="joint5"/>
+    <child link="joint6"/>
+    <origin xyz= "0.0288 0 0.02976" rpy = "0 0 0"/>  
+  </joint>
+
+  <joint name="joint6output_to_joint6" type="revolute">
+    <axis xyz="0 -1 0"/>
+    <limit effort = "1000.0" lower = "-3.14" upper = "3.14159" velocity = "0"/>
+    <parent link="joint6"/>
+    <child link="joint6_flange"/>
+    <origin xyz= "0 0.0456 0.03792 " rpy = "0 0 0"/>  
+  </joint>
+
+
+  
+  <link name="sucker_joint">
+
+    <visual name="sucker_visual">
+      <geometry>
+        <!-- <cylinder length="0.08" radius="0.0125"/> -->
+        <mesh filename="package://aibot_description/meshes/sucker.stl"  scale="0.001 0.001 0.001"/>
+      </geometry>
+      <origin xyz = "0.0 0 0 " rpy = "-1.57 0 1.57"/>
+      <material name = "white">
+        <color rgba = "0.9 0.9 0.9 1"/>
+      </material>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder length="0.06" radius="0.0125"/>
+      </geometry>
+      <origin xyz = "0.0 0 0 " rpy = "0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="sucker_joint_to_joint6_flange" type="fixed">
+    <parent link="joint6_flange"/>
+    <child link="sucker_joint"/>
+    <origin xyz= "0 0.022 0" rpy = "0 0 0"/>
+  </joint>
+
+
+</robot>

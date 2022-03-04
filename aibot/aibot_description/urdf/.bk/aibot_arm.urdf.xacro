@@ -1,0 +1,19 @@
+<?xml version='1.0'?>
+
+<robot name="aibot" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find aibot_description)/urdf/arm/arm.urdf.xacro" />
+  <xacro:property name="PI" value="3.1415926535897931" />
+
+  <link name = "base_link"/>
+  
+  <!-- arm -->
+  <aibot_arm parent_link="base_link">
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </aibot_arm>
+
+  <!-- gazebo controller plugin -->
+  <xacro:include filename="$(find aibot_description)/urdf/controller/ros_controller.urdf.xacro" />
+
+
+</robot>

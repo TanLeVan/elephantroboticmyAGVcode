@@ -1,0 +1,6 @@
+uint8 base
+uint16 max_speed
+uint32 counts_per_rev
+float32 wheel_diameter
+float32 fr_wheels_distance
+float32 lr_wheels_distance

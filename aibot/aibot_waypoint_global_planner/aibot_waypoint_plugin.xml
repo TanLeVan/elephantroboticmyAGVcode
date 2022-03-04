@@ -1,0 +1,9 @@
+<library path="lib/libaibot_waypoint_global_planner">
+  <class
+    name="aibot_waypoint_global_planner/AibotWaypointGlobalPlanner"
+    type="aibot_waypoint_global_planner::AibotWaypointGlobalPlanner"
+    base_class_type="nav_core::BaseGlobalPlanner">
+
+    <description>This is a global planner plugin for waypoint-based path generation.</description>
+  </class>
+</library>
